@@ -7,44 +7,36 @@ import settings
 import msal
 
 
-st.set_page_config(
-    page_title="test-app",
-    page_icon="✈️",
-)
-
-# Here I replace the div defined by default by streamlit containing the multioption menu within the sidebar with the option_menu
-st.markdown("""
-    <style>
-        header {visibility: hidden;}
-        footer {visibility: hidden;}
-        .block-container {
-            padding-top: 2rem;
-            padding-bottom: 0rem;
-        }
-        /* Hide the top menu */
-        div[data-testid="stSidebarNav"] {
-            display: none;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
-pages = {
-    'page 1': page1,
-    'page 2': page2,
-    'page3': page3,
-}
-
-with st.sidebar:
-    selected = option_menu(
-        menu_title="Navigation",
-        options=list(pages.keys()),
-        icons=['graph-up', 'graph-up', 'graph-up'],
-        menu_icon='bi-folder',
-        default_index=0,
+def run():
+    st.set_page_config(
+        page_title="Hello",
+        page_icon="👋",
     )
 
-page = pages[selected]
-page.show()
+    st.write("# Welcome to Streamlit! 👋")
+
+    st.sidebar.success("Select a demo above.")
+
+    st.markdown(
+        """
+        Streamlit is an open-source app framework built specifically for
+        Machine Learning and Data Science projects.
+        **👈 Select a demo from the sidebar** to see some examples
+        of what Streamlit can do!
+        ### Want to learn more?
+        - Check out [streamlit.io](https://streamlit.io)
+        - Jump into our [documentation](https://docs.streamlit.io)
+        - Ask a question in our [community
+          forums](https://discuss.streamlit.io)
+        ### See more complex demos
+        - Use a neural net to [analyze the Udacity Self-driving Car Image
+          Dataset](https://github.com/streamlit/demo-self-driving)
+        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
+        """
+    )
+
+if __name__ == "__main__":
+    run()
 
 # start the application MSAL
 app = msal.ConfidentialClientApplication(
