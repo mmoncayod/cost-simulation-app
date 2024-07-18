@@ -1,0 +1,54 @@
+# Entornos virtuales
+.env
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Archivos generados por Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Archivos de paquetes
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+*.egg-info/
+.installed.cfg
+
+# Archivos de cobertura de pruebas
+.coverage
+.tox/
+.nox/
+.hypothesis/
+coverage.xml
+htmlcov/
+
+# Archivos de caché de herramientas
+.mypy_cache/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Configuración de IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Archivos de logs y temporales
+*.log
+*.tmp
+*.bak
+*.old
+Thumbs.db
