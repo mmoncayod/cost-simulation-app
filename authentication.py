@@ -18,7 +18,7 @@ app = msal.ConfidentialClientApplication(
 def get_auth_url():
     auth_url = app.get_authorization_request_url(
         scopes=settings.SCOPES,
-        redirect_uri=f"https://cost-simulation-app-vthhaczahnv7bajvcnwnmj.streamlit.app/{settings.REDIRECT_PATH}"
+        redirect_uri=f"https://cost-simulation-app-vthhaczahnv7bajvcnwnmj.streamlit.app{settings.REDIRECT_PATH}"
     )
     return auth_url
 
@@ -27,7 +27,7 @@ def get_token_from_code(callback_url):
     result = app.acquire_token_by_authorization_code(
         code=callback_url.split("code=")[1],
         scopes=settings.SCOPES,
-        redirect_uri=f"https://cost-simulation-app-vthhaczahnv7bajvcnwnmj.streamlit.app/{settings.REDIRECT_PATH}"
+        redirect_uri=f"https://cost-simulation-app-vthhaczahnv7bajvcnwnmj.streamlit.app{settings.REDIRECT_PATH}"
     )
     return result
 
