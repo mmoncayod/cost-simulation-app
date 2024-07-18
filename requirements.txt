@@ -1,0 +1,6 @@
+streamlit
+streamlit_option_menu
+msal
+python-dotenv
+azure-identity
+azure-keyvault-secrets
