@@ -35,4 +35,3 @@ def get_token_from_code(callback_url):
 def refresh_token(refresh_token):
     result = app.acquire_token_by_refresh_token(refresh_token, scopes=settings.SCOPES)
     return result
-
