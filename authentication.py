@@ -1,16 +1,17 @@
 import msal # azure library to manage the authentication
 from azure.identity import DefaultAzureCredential # This gets the credentials to access Azure
-from azure.keyvault.secrets import SecretClient # This gets secrets from vault
+#from azure.keyvault.secrets import SecretClient # This gets secrets from vault
 import settings
 
 # Accessing key vault
-credential = DefaultAzureCredential() # find the credentials
-client = SecretClient(vault_url=settings.KV_URI, credential=credential) # creating a client to interact with Azure Key Vault
+# credential = DefaultAzureCredential() # find the credentials
+# client = SecretClient(vault_url=settings.KV_URI, credential=credential) # creating a client to interact with Azure Key Vault
 
 # handling authentication of the application with Azure AD
 app = msal.ConfidentialClientApplication(
     settings.CLIENT_ID, authority=settings.AUTHORITY,
-    client_credential=settings.CLIENT_SECRET 
+    client_credential=settings.CLIENT_SECRET,
+    authority=settings.AUTHORITY 
 )
 
 # AUTHENTICATION FUNCTIONS
@@ -32,7 +33,7 @@ def get_token_from_code(callback_url):
     return result
 
 # get a new access token without the user having to log in again
-def refresh_token(refresh_token):
-    result = app.acquire_token_by_refresh_token(refresh_token, scopes=settings.SCOPES)
-    return result
+# def refresh_token(refresh_token):
+#    result = app.acquire_token_by_refresh_token(refresh_token, scopes=settings.SCOPES)
+#   return result
 
