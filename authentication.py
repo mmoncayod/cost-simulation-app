@@ -46,7 +46,7 @@ def get_auth_url():
         authority=settings.AUTHORITY,
         client_credential=settings.CLIENT_SECRET,
     )
-    return app.get_authorization_request_url(settings.SCOPE)
+    return app.get_authorization_request_url(scopes=settings.SCOPE)
 
 def get_token_from_code(callback_url):
     app = msal.ConfidentialClientApplication(
@@ -55,7 +55,7 @@ def get_token_from_code(callback_url):
         client_credential=settings.CLIENT_SECRET,
     )
     result = app.acquire_token_by_authorization_code(
-        callback_url,
+        code=callback_url.split("code=")[1],
         scopes=settings.SCOPE,
         redirect_uri=settings.REDIRECT_URI,
     )
