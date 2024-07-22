@@ -7,6 +7,7 @@ import settings
 # credential = DefaultAzureCredential() # find the credentials
 # client = SecretClient(vault_url=settings.KV_URI, credential=credential) # creating a client to interact with Azure Key Vault
 
+"""
 # handling authentication of the application with Azure AD
 app = msal.ConfidentialClientApplication(
     settings.CLIENT_ID, authority=settings.AUTHORITY,
@@ -37,3 +38,25 @@ def get_token_from_code(callback_url):
 #    result = app.acquire_token_by_refresh_token(refresh_token, scopes=settings.SCOPES)
 #   return result
 
+"""
+
+def get_auth_url():
+    app = msal.ConfidentialClientApplication(
+        settings.CLIENT_ID,
+        authority=settings.AUTHORITY,
+        client_credential=settings.CLIENT_SECRET,
+    )
+    return app.get_authorization_request_url(settings.SCOPE)
+
+def get_token_from_code(callback_url):
+    app = msal.ConfidentialClientApplication(
+        settings.CLIENT_ID,
+        authority=settings.AUTHORITY,
+        client_credential=settings.CLIENT_SECRET,
+    )
+    result = app.acquire_token_by_authorization_code(
+        callback_url,
+        scopes=settings.SCOPE,
+        redirect_uri=settings.REDIRECT_URI,
+    )
+    return result
