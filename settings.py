@@ -1,10 +1,8 @@
 from dotenv import load_dotenv
 import os
 
-# Cargar las variables de entorno desde .env
 load_dotenv()
 
-# Decidir entre dev y prod dependiendo de una variable de entorno ENVIRONMENT
 environment = os.getenv('ENVIRONMENT', 'dev').lower()
 
 if environment == 'prod':

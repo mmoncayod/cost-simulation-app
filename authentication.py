@@ -9,9 +9,8 @@ app = ConfidentialClientApplication(
 )
 
 def authenticate_user():
-    # Configuración de la base URL según el entorno
     base_url = "http://localhost:8501" if settings.environment == 'dev' else "https://cost-simulation-app-vthhaczahnv7bajvcnwnmj.streamlit.app"
-    redirect_uri = f"{base_url}{settings.REDIRECT_PATH}"  # Asegúrate de que REDIRECT_PATH = '/getAToken'
+    redirect_uri = f"{base_url}{settings.REDIRECT_PATH}"  
 
     result = None
     accounts = app.get_accounts()
@@ -28,4 +27,3 @@ def authenticate_user():
     else:
         st.write("Please log in to see your username.")
 
-# Llamar a esta función desde app.py para iniciar el proceso de autenticación
