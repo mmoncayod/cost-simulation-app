@@ -1,62 +1,28 @@
-import msal # azure library to manage the authentication
-from azure.identity import DefaultAzureCredential # This gets the credentials to access Azure
-#from azure.keyvault.secrets import SecretClient # This gets secrets from vault
+import streamlit as st
+from msal import ConfidentialClientApplication
 import settings
 
-# Accessing key vault
-# credential = DefaultAzureCredential() # find the credentials
-# client = SecretClient(vault_url=settings.KV_URI, credential=credential) # creating a client to interact with Azure Key Vault
-
-"""
-# handling authentication of the application with Azure AD
-app = msal.ConfidentialClientApplication(
-    settings.CLIENT_ID, authority=settings.AUTHORITY,
+# Utilizar las configuraciones desde settings.py
+app = ConfidentialClientApplication(
+    settings.CLIENT_ID,
+    authority=settings.AUTHORITY,
     client_credential=settings.CLIENT_SECRET,
-    authority=settings.AUTHORITY 
 )
 
-# AUTHENTICATION FUNCTIONS
-# redirects user to Azure AD sign-in page
-def get_auth_url():
-    auth_url = app.get_authorization_request_url(
-        scopes=settings.SCOPES,
-        redirect_uri=f"https://cost-simulation-app-vthhaczahnv7bajvcnwnmj.streamlit.app{settings.REDIRECT_PATH}"
-    )
-    return auth_url
+def authenticate_user():
+    result = None
+    accounts = app.get_accounts()
+    if accounts:
+        result = app.acquire_token_silent(settings.SCOPES, account=accounts[0])
 
-# takes authorization code and exchanges it for an "access token"
-def get_token_from_code(callback_url):
-    result = app.acquire_token_by_authorization_code(
-        code=callback_url.split("code=")[1],
-        scopes=settings.SCOPES,
-        redirect_uri=f"https://cost-simulation-app-vthhaczahnv7bajvcnwnmj.streamlit.app{settings.REDIRECT_PATH}"
-    )
-    return result
+    if not result:
+        flow = app.initiate_auth_code_flow(settings.SCOPES, redirect_uri="http://localhost:8501" + settings.REDIRECT_PATH)
+        st.write('Please log in:', flow['auth_uri'])
 
-# get a new access token without the user having to log in again
-# def refresh_token(refresh_token):
-#    result = app.acquire_token_by_refresh_token(refresh_token, scopes=settings.SCOPES)
-#   return result
+    if result:
+        st.write("Successfully logged in!")
+        st.write(result['account']['username'])
+    else:
+        st.write("Please log in to see your username.")
 
-"""
-
-def get_auth_url():
-    app = msal.ConfidentialClientApplication(
-        settings.CLIENT_ID,
-        authority=settings.AUTHORITY,
-        client_credential=settings.CLIENT_SECRET,
-    )
-    return app.get_authorization_request_url(scopes=settings.SCOPE)
-
-def get_token_from_code(callback_url):
-    app = msal.ConfidentialClientApplication(
-        settings.CLIENT_ID,
-        authority=settings.AUTHORITY,
-        client_credential=settings.CLIENT_SECRET,
-    )
-    result = app.acquire_token_by_authorization_code(
-        code=callback_url.split("code=")[1],
-        scopes=settings.SCOPE,
-        redirect_uri=settings.REDIRECT_URI,
-    )
-    return result
+# Esta función puede ser llamada en app.py para iniciar el proceso de autenticación
