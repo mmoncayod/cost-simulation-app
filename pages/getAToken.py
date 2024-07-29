@@ -1,6 +1,7 @@
 import streamlit as st
 from msal import ConfidentialClientApplication
 import settings
+import authentication
 
 # Aquí inicializa tu aplicación confidencial de MSAL
 app = ConfidentialClientApplication(
@@ -18,7 +19,7 @@ if code:
     result = app.acquire_token_by_authorization_code(
         code,
         scopes=settings.SCOPES,
-        redirect_uri=f"{settings.BASE_URL}{settings.REDIRECT_PATH}"
+        redirect_uri=f"{authentication.base_url}{settings.REDIRECT_PATH}"
     )
     if 'access_token' in result:
         st.success("Successfully logged in!")
