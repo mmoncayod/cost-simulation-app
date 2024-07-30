@@ -2,7 +2,20 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import authentication
 
-authentication.authenticate_user()
+if 'authenticated' not in st.session_state or not st.session_state.authenticated:
+    st.warning("You are not logged in.")
+    
+    # Mostrar botón de inicio de sesión
+    if "auth_uri" in st.session_state:
+        if st.button("Log in with Microsoft"):
+            st.markdown(f"[Log in with Microsoft]({st.session_state['auth_uri']})")
+    else:
+        authentication.authenticate_user()
+else:
+    st.success(f"Welcome, {st.session_state['user']['username']}!")
+
+
+
 def run():
     st.set_page_config(
         page_title="Hello",
