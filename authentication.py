@@ -29,6 +29,7 @@ def handle_redirect():
     # Verificar si 'code' está en los parámetros y extraer el primer valor si es una lista
     code_list = query_params.get("code", [None])
     code = code_list[0] if code_list else None
+    st.write("Code List:", code_list) 
 
     st.write("Authorization Code:", code)  # Mostrar el código para depuración
 
