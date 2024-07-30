@@ -26,7 +26,7 @@ def handle_redirect():
     # get authorization code from URL
     query_params = st.query_params
     st.write("Query Params:", query_params) 
-    code = query_params.get("code", [None])[1] # code is the authorization code sent by Azure AD after user authentication.
+    code = query_params.get("code", [None])[0] # code is the authorization code sent by Azure AD after user authentication.
     st.write("Authorization Code:", code) # deactivate this ------its just for debuging --------
 
     if code and 'flow' in st.session_state:
