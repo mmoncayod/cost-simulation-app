@@ -5,11 +5,14 @@ import authentication
 # Manejar redirección desde Azure AD
 query_params = st.query_params
 if "code" in query_params:
-    authentication.handle_redirect()
-    st.experimental_set_query_params()  # Limpiar los parámetros de consulta después de manejar
+    code = query_params.get("code", [None])[0]
+    if code:
+        authentication.handle_redirect()
+    else:
+        st.error("Authorization code not found in the request.")
 
 # Verificación de autenticación
-if 'authenticated' not in st.session_state or not st.session_state['authenticated']:
+if 'authenticated' not in st.session_state or not st.session_state.authenticated:
     st.warning("You are not logged in.")
     
     # Mostrar botón de inicio de sesión
@@ -21,6 +24,7 @@ if 'authenticated' not in st.session_state or not st.session_state['authenticate
     st.stop()
 else:
     st.success(f"Welcome, {st.session_state['user']['username']}!")
+    # Aquí se muestra contenido protegido o se redirige a la página principal
 
 def run():
     st.set_page_config(
