@@ -10,7 +10,7 @@ app = ConfidentialClientApplication(
 
 def authenticate_user():
     base_url = "http://localhost:8501" if settings.environment == 'dev' else "https://cost-simulation-app-vthhaczahnv7bajvcnwnmj.streamlit.app"
-    redirect_uri = f"{base_url}{settings.REDIRECT_PATH}"  
+    redirect_uri = base_url  
 
     result = None
     accounts = app.get_accounts()

@@ -15,7 +15,7 @@ else:
     CLIENT_SECRET = os.getenv('DEV_AZURE_CLIENT_SECRET')
 
 AUTHORITY = f"https://login.microsoftonline.com/{TENANT_ID}"
-REDIRECT_PATH = "/getAToken" 
+# REDIRECT_PATH = "/getAToken" 
 SCOPES = ["User.Read"]
 
 if not all([CLIENT_ID, TENANT_ID, CLIENT_SECRET]):
