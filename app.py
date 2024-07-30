@@ -13,12 +13,14 @@ if 'authenticated' not in st.session_state or not st.session_state.authenticated
     
     # Mostrar botón de inicio de sesión
     if "auth_uri" in st.session_state:
-        st.markdown(f"[Log in with Microsoft]({st.session_state['auth_uri']})")
+        if st.button("Log in with Microsoft"):
+            st.markdown(f"[Log in with Microsoft]({st.session_state['auth_uri']})")
     else:
         authentication.authenticate_user()
-    st.stop()  # Detener la ejecución del resto de la página hasta que el usuario se autentique
+    st.stop()
 else:
     st.success(f"Welcome, {st.session_state['user']['username']}!")
+    # Aquí se muestra contenido protegido
 
 def run():
     st.set_page_config(
