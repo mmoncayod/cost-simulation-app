@@ -27,6 +27,7 @@ def handle_redirect():
     query_params = st.query_params
     st.write("Query Params:", query_params) 
     code = query_params.get("code", [None])[0] # code is the authorization code sent by Azure AD after user authentication.
+    st.write("Authorization Code:", code)
 
     if code and 'flow' in st.session_state:
         flow = st.session_state['flow']
@@ -35,6 +36,7 @@ def handle_redirect():
             st.session_state['authenticated'] = True
             st.session_state['user'] = result['account']
             st.success("Successfully logged in!")
+            st.write("Access Token:", result['access_token'])
         else:
             st.error("Failed to log in.")
             st.write(result.get('error_description', ''))
