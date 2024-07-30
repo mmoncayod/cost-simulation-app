@@ -26,11 +26,11 @@ def handle_redirect():
     # get authorization code from URL
     query_params = st.query_params
     st.write("Query Params:", query_params) 
-    code = query_params.get("code", [None])[0] # code is the authorization code sent by Azure AD after user authentication.
-    st.write("Authorization Code:", code) # deactivate this ------its just for debuging --------
+    code = query_params.get("code", [None])[0] # this is ok -- code is the authorization code sent by Azure AD after user authentication.
 
     if code and 'flow' in st.session_state:
         flow = st.session_state['flow']
+        st.write("Flow data", flow)
         result = app.acquire_token_by_auth_code_flow(flow, {'code': code}, scopes=settings.SCOPES) # THIS PART EXCHANGE THE CODE FOR THE ACCESS_TOKEN -  REVISA SI LO HACE BIEN -  DEBE DEVOLBER UN DICCIONARIO
         st.write("Result:", result)
         if 'access_token' in result:
