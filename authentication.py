@@ -21,6 +21,7 @@ def authenticate_user():
         flow = app.initiate_auth_code_flow(settings.SCOPES, redirect_uri=redirect_uri)
         st.session_state["flow"] = flow
         st.session_state["auth_uri"] = flow["auth_uri"]
+        st.write("Flow initialized and stored in session:", flow)
 
 def handle_redirect():
     # get authorization code from URL
