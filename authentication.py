@@ -19,11 +19,24 @@ def authenticate_user():
 
     if not result:
         flow = app.initiate_auth_code_flow(settings.SCOPES, redirect_uri=redirect_uri)
-        st.write('Please log in:', flow['auth_uri'])
+        st.session_state["flow"] = flow
+        st.session_state["auth_uri"] = flow["auth_uri"]
 
-    if result:
-        st.write("Successfully logged in!")
-        st.write(result['account']['username'])
+def hanfle_redirect():
+    # get authorization code from URL
+    query_params = st.query_params
+    code = query_params.get("code", [None])[0] # code is the authorization code sent by Azure AD after user authentication.
+
+    if code and 'flow' in st.session_state:
+        flow = st.session_state['flow']
+        result = app.acquire_token_by_auth_code_flow(flow, {'code': code}, scopes=settings.SCOPES)
+        if 'access_token' in result:
+            st.session_state['authenticated'] = True
+            st.session_state['user'] = result['account']
+            st.success("Successfully logged in!")
+        else:
+            st.error("Failed to log in.")
+            st.write(result.get('error_description', ''))
     else:
-        st.write("Please log in to see your username.")
+        st.error("Authorization code not found in the request.")
 

@@ -1,9 +1,8 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
-from pages import page1, page2, page3
 import authentication
 
-
+authentication.authenticate_user()
 def run():
     st.set_page_config(
         page_title="Hello",
@@ -32,4 +31,3 @@ def run():
         """
     )
 
-authentication.authenticate_user()
