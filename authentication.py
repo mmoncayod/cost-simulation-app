@@ -22,7 +22,7 @@ def authenticate_user():
         st.session_state["flow"] = flow
         st.session_state["auth_uri"] = flow["auth_uri"]
 
-def hanfle_redirect():
+def handle_redirect():
     # get authorization code from URL
     query_params = st.query_params
     code = query_params.get("code", [None])[0] # code is the authorization code sent by Azure AD after user authentication.
