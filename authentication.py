@@ -31,16 +31,20 @@ def handle_redirect():
     if code and 'flow' in st.session_state:
         flow = st.session_state['flow']
         st.write("Flow data", flow)
-        result = app.acquire_token_by_auth_code_flow(flow, {'code': code}, scopes=settings.SCOPES) # THIS PART EXCHANGE THE CODE FOR THE ACCESS_TOKEN -  REVISA SI LO HACE BIEN -  DEBE DEVOLBER UN DICCIONARIO
-        st.write("Result:", result)
-        if 'access_token' in result:
-            st.session_state['authenticated'] = True
-            st.session_state['user'] = result['account']
-            st.success("Successfully logged in!")
-            st.write("Access Token:", result['access_token']) # deactivate this ------its just for debuging --------
-        else:
-            st.error("Failed to log in.")
-            st.write(result.get('error_description', ''))
+        try:
+            result = app.acquire_token_by_auth_code_flow(flow, {'code': code}, scopes=settings.SCOPES)
+            st.write("Result:", result)  # Debería mostrar el resultado del intercambio
+            if 'access_token' in result:
+                st.session_state['authenticated'] = True
+                st.session_state['user'] = result.get('account')
+                st.success("Successfully logged in!")
+                st.write("Access Token:", result['access_token'])
+            else:
+                st.error("Failed to log in.")
+                st.write(result.get('error_description', 'No error description available.'))
+        except Exception as e:
+            st.error("An exception occurred during token exchange.")
+            st.write(str(e))
     else:
-        st.error("Authorization code not found in the request.")
+        st.error("Authorization code or flow not found in session.")
 
