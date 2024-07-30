@@ -23,30 +23,24 @@ def authenticate_user():
         st.session_state["auth_uri"] = flow["auth_uri"]
 
 def handle_redirect():
+    # get authorization code from URL
     query_params = st.query_params
-    st.write("Query Params:", query_params)  # Mostrar todos los parámetros para depuración
+    st.write("Query Params:", query_params) 
+    code = query_params.get("code", [None])[0] # code is the authorization code sent by Azure AD after user authentication.
+    st.write("Authorization Code:", code) # deactivate this ------its just for debuging --------
 
-    # Verificar si 'code' está en los parámetros y extraer el primer valor si es una lista
-    code_list = query_params.get("code", [None])
-    code = code_list[0] if code_list else None
-    st.write("Code List:", code_list) 
-
-    st.write("Authorization Code:", code)  # Mostrar el código para depuración
-
-    if code and code != "0":  # Asegúrate de que el código es válido y no '0'
-        if 'flow' in st.session_state:
-            flow = st.session_state['flow']
-            result = app.acquire_token_by_auth_code_flow(flow, {'code': code}, scopes=settings.SCOPES)
-            if 'access_token' in result:
-                st.session_state['authenticated'] = True
-                st.session_state['user'] = result['account']
-                st.success("Successfully logged in!")
-                st.write("Access Token:", result['access_token'])  # Para depuración
-            else:
-                st.error("Failed to log in.")
-                st.write(result.get('error_description', ''))
+    if code and 'flow' in st.session_state:
+        flow = st.session_state['flow']
+        result = app.acquire_token_by_auth_code_flow(flow, {'code': code}, scopes=settings.SCOPES) # THIS PART EXCHANGE THE CODE FOR THE ACCESS_TOKEN -  REVISA SI LO HACE BIEN -  DEBE DEVOLBER UN DICCIONARIO
+        st.write("Result:", result)
+        if 'access_token' in result:
+            st.session_state['authenticated'] = True
+            st.session_state['user'] = result['account']
+            st.success("Successfully logged in!")
+            st.write("Access Token:", result['access_token']) # deactivate this ------its just for debuging --------
         else:
-            st.error("Flow not found in session state.")
+            st.error("Failed to log in.")
+            st.write(result.get('error_description', ''))
     else:
-        st.error("Authorization code not found or is invalid in the request.")
+        st.error("Authorization code not found in the request.")
 
