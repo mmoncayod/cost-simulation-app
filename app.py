@@ -3,13 +3,13 @@ from streamlit_option_menu import option_menu
 import authentication
 
 # Manejar redirección desde Azure AD
-#query_params = st.query_params
-#if "code" in query_params:
-    #code = query_params.get("code", [None])[0]
-    #if code:
-        #authentication.handle_redirect()
-    #else:
-        #st.error("Authorization code not found in the request.")
+query_params = st.query_params
+if "code" in query_params:
+    code = query_params.get("code", [None])[0]
+    if code:
+        authentication.handle_redirect()
+    else:
+        st.error("Authorization code not found in the request.")
 
 # Verificación de autenticación
 if 'authenticated' not in st.session_state or not st.session_state.authenticated:
