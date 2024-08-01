@@ -46,9 +46,9 @@ def authenticate_user():
 def handle_redirect():
     # get authorization code from URL
     query_params = st.query_params
-    st.write("Query Params:", query_params) 
     code = query_params.get("code", [None])[0] # this is ok -- code is the authorization code sent by Azure AD after user authentication.
-
+    st.write("Query Params:", query_params) 
+    
     if code and 'flow' in st.session_state:
         flow = st.session_state['flow']
         st.write("Flow data", flow)
