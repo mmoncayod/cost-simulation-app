@@ -2,27 +2,42 @@ import streamlit as st
 from msal import ConfidentialClientApplication
 import settings
 
+#--- // ---#
+# Crear un cliente de autenticación utilizando MSAL (Microsoft Authentication Library)
+# con la configuración proporcionada (ID de cliente, autoridad, secreto de cliente)
+# Esto es esencial para interactuar con Azure AD y gestionar los tokens de acceso.
+
 app = ConfidentialClientApplication(
     settings.CLIENT_ID,
     authority=settings.AUTHORITY,
     client_credential=settings.CLIENT_SECRET,
 )
 
+#--- // ---#
+#  Iniciar el proceso de autenticación del usuario.
+
 def authenticate_user():
+    #  Define la URI de redirección a la que Azure AD enviará al usuario después de la autenticación.
     base_url = "http://localhost:8501" if settings.environment == 'dev' else "https://cost-simulation-app-vthhaczahnv7bajvcnwnmj.streamlit.app"
     redirect_uri = base_url  
 
-    result = None
-    accounts = app.get_accounts()
-    if accounts:
-        result = app.acquire_token_silent(settings.SCOPES, account=accounts[0]) # Get a token without user intervention
+    result = None # almacenara el token de acceso
 
-    if not result:
-        flow = app.initiate_auth_code_flow(settings.SCOPES, redirect_uri=redirect_uri)
-        st.session_state["flow"] = flow
-        st.session_state["auth_uri"] = flow["auth_uri"]
-        st.session_state["state"] = flow["state"] 
-        st.write("Flow initialized and stored in session:", flow) # ESTA PIDIENDO PERMISOS ADICIONALES? POR QUE?
+    # Verifica si hay cuentas almacenadas y trata de adquirir un token en silencio 
+    # (sin intervención del usuario) si ya hay una sesión activa
+    #accounts = app.get_accounts()
+    #if accounts:
+        #result = app.acquire_token_silent(settings.SCOPES, account=accounts[0]) 
+
+    # Si no hay token en la session se inicia el flujo de autenticacion
+    #if not result:
+    flow = app.initiate_auth_code_flow(settings.SCOPES, redirect_uri=redirect_uri)
+    st.session_state["flow"] = flow
+    st.session_state["auth_uri"] = flow["auth_uri"]
+    st.session_state["state"] = flow["state"] 
+    st.write("Flow initialized and stored in session:", flow) # ESTA PIDIENDO PERMISOS ADICIONALES? POR QUE?
+
+#--- // ---#
 
 def handle_redirect():
     # get authorization code from URL
