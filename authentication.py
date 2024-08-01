@@ -40,9 +40,9 @@ def handle_redirect():
                 st.session_state['user'] = result.get('account')
                 st.success("Successfully logged in!")
                 st.write("Access Token:", result['access_token'])
-                api_result = app.acquire_token_silent(SCOPES_API, account=result['account'])
+                api_result = app.acquire_token_silent(scopes=settings.SCOPES_API, account=result['account'])
                 if not api_result:
-                    api_result = app.acquire_token_by_auth_code_flow(flow, {'code': code}, scopes=SCOPES_API)
+                    api_result = app.acquire_token_by_auth_code_flow(flow, {'code': code}, scopes=settings.SCOPES_API)
                 st.write("API Access Token:", api_result.get('access_token', 'No token obtained'))
             else:
                 st.error("Failed to log in.")
