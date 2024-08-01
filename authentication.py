@@ -39,7 +39,7 @@ def authenticate_user():
         st.session_state["flow"] = flow
         st.session_state["auth_uri"] = flow["auth_uri"]
         st.session_state["state"] = flow["state"] 
-        st.write("Flow initialized and stored in session:", flow) # ESTA PIDIENDO PERMISOS ADICIONALES? POR QUE?
+        #st.write("Flow initialized and stored in session:", flow) # ESTA PIDIENDO PERMISOS ADICIONALES? POR QUE?
 
 #--- // ---#
 
@@ -50,6 +50,7 @@ def handle_redirect():
     # st.write("Query Params:", query_params) 
 
     if code:
+        st.write("Session State:", st.session_state)
         if 'flow' in st.session_state:
             flow = st.session_state['flow']
             try:
