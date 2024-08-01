@@ -29,11 +29,12 @@ def authenticate_user():
     accounts = app.get_accounts()
     if accounts:
         result = app.acquire_token_silent(settings.SCOPES, account=accounts[0]) 
-        print(result)
     # Si no hay token en la session se inicia el flujo de autenticacion
     # flow: Contiene información necesaria para completar el flujo de autenticación (state, redirect_uri, scope, auth_uri, code_verifier, nonce, claims_challenge)
     
     if not result:
+        # initiate_auth_code_flow inicia un nuevo flujo de autorización utilizando el protocolo de OAuth 2.0. 
+        # El flow debe contener toda la información necesaria para que la aplicación pueda intercambiar el código de autorización por tokens de acceso y actualización.
         flow = app.initiate_auth_code_flow(settings.SCOPES, redirect_uri=redirect_uri)
         st.session_state["flow"] = flow
         st.session_state["auth_uri"] = flow["auth_uri"]
