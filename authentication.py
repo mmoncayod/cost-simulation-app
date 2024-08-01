@@ -15,13 +15,13 @@ def authenticate_user():
     result = None
     accounts = app.get_accounts()
     if accounts:
-        result = app.acquire_token_silent(settings.SCOPES, account=accounts[0]) # Get a token without user intervention
+        result = app.acquire_token_silent(settings.SCOPES_AUTH, account=accounts[0]) # Authentication 
 
     if not result:
-        flow = app.initiate_auth_code_flow(settings.SCOPES, redirect_uri=redirect_uri)
+        flow = app.initiate_auth_code_flow(settings.SCOPES_AUTH, redirect_uri=redirect_uri)
         st.session_state["flow"] = flow
         st.session_state["auth_uri"] = flow["auth_uri"]
-        st.write("Flow initialized and stored in session:", flow) # ESTA PIDIENDO PERMISOS ADICIONALES? POR QUE?
+        st.write("Flow initialized and stored in session:", flow) 
 
 def handle_redirect():
     # get authorization code from URL
@@ -33,13 +33,17 @@ def handle_redirect():
         flow = st.session_state['flow']
         st.write("Flow data", flow)
         try:
-            result = app.acquire_token_by_auth_code_flow(flow, {'code': code}, scopes=settings.SCOPES)
+            result = app.acquire_token_by_auth_code_flow(flow, {'code': code}, scopes=settings.SCOPES_AUTH)
             st.write("Result:", result)  # Debería mostrar el resultado del intercambio
             if 'access_token' in result:
                 st.session_state['authenticated'] = True
                 st.session_state['user'] = result.get('account')
                 st.success("Successfully logged in!")
                 st.write("Access Token:", result['access_token'])
+                api_result = app.acquire_token_silent(SCOPES_API, account=result['account'])
+                if not api_result:
+                    api_result = app.acquire_token_by_auth_code_flow(flow, {'code': code}, scopes=SCOPES_API)
+                st.write("API Access Token:", api_result.get('access_token', 'No token obtained'))
             else:
                 st.error("Failed to log in.")
                 st.write(result.get('error_description', 'No error description available.'))

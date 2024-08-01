@@ -16,7 +16,8 @@ else:
 
 AUTHORITY = f"https://login.microsoftonline.com/{TENANT_ID}"
 # REDIRECT_PATH = "/getAToken" 
-SCOPES =  ['User.Read', 'openid']
+SCOPES_AUTH = ["openid", "profile"]  
+SCOPES_API = ["User.Read"] 
 
 if not all([CLIENT_ID, TENANT_ID, CLIENT_SECRET]):
     raise ValueError("One or more environment variables have not been configured correctly.")
