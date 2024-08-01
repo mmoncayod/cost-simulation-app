@@ -50,7 +50,7 @@ def handle_redirect():
     # st.write("Query Params:", query_params) 
 
     if code:
-        if flow in st.session_state:
+        if 'flow' in st.session_state:
             flow = st.session_state['flow']
             try:
                 result = app.acquire_token_by_auth_code_flow(flow, {'code': code}, scopes=settings.SCOPES)
