@@ -25,17 +25,20 @@ def authenticate_user():
 
     # Verifica si hay cuentas almacenadas y trata de adquirir un token en silencio 
     # (sin intervención del usuario) si ya hay una sesión activa
-    #accounts = app.get_accounts()
-    #if accounts:
-        #result = app.acquire_token_silent(settings.SCOPES, account=accounts[0]) 
 
+    accounts = app.get_accounts()
+    if accounts:
+        result = app.acquire_token_silent(settings.SCOPES, account=accounts[0]) 
+        print(result)
     # Si no hay token en la session se inicia el flujo de autenticacion
-    #if not result:
-    flow = app.initiate_auth_code_flow(settings.SCOPES, redirect_uri=redirect_uri)
-    st.session_state["flow"] = flow
-    st.session_state["auth_uri"] = flow["auth_uri"]
-    st.session_state["state"] = flow["state"] 
-    st.write("Flow initialized and stored in session:", flow) # ESTA PIDIENDO PERMISOS ADICIONALES? POR QUE?
+    # flow: Contiene información necesaria para completar el flujo de autenticación (state, redirect_uri, scope, auth_uri, code_verifier, nonce, claims_challenge)
+    
+    if not result:
+        flow = app.initiate_auth_code_flow(settings.SCOPES, redirect_uri=redirect_uri)
+        st.session_state["flow"] = flow
+        st.session_state["auth_uri"] = flow["auth_uri"]
+        st.session_state["state"] = flow["state"] 
+        st.write("Flow initialized and stored in session:", flow) # ESTA PIDIENDO PERMISOS ADICIONALES? POR QUE?
 
 #--- // ---#
 
