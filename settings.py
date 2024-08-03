@@ -5,7 +5,7 @@ load_dotenv()
 
 environment = os.getenv('ENVIRONMENT', 'dev').lower()
 
-if environment == 'prod':
+if environment == 'dev':
     CLIENT_ID = os.getenv('PROD_AZURE_CLIENT_ID')
     TENANT_ID = os.getenv('PROD_AZURE_TENANT_ID')
     CLIENT_SECRET = os.getenv('PROD_AZURE_CLIENT_SECRET')
