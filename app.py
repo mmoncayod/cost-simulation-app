@@ -2,28 +2,17 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import authentication
 
-# Manejar redirección desde Azure AD
-query_params = st.query_params
-if "code" in query_params:
-    code = query_params.get("code", [None])[0]
-    if code:
-        authentication.handle_redirect()
-    else:
-        st.error("Authorization code not found in the request.")
-
-# Verificación de autenticación
 if 'authenticated' not in st.session_state or not st.session_state.authenticated:
     st.warning("You are not logged in.")
     
     # Mostrar botón de inicio de sesión
     if "auth_uri" in st.session_state:
-        if st.button("Log in with Microsoft"):
-            st.markdown(f"[Log in with Microsoft]({st.session_state['auth_uri']})")
+        st.markdown(f"[Log in with Microsoft]({st.session_state['auth_uri']})")
     else:
         authentication.authenticate_user()
     st.stop()
 else:
-    st.success(f"Welcome, {st.session_state['user']['username']}!")
+    st.success(f"Welcome!")
     # Aquí se muestra contenido protegido o se redirige a la página principal
 
 def run():

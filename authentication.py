@@ -17,42 +17,38 @@ app = ConfidentialClientApplication(
 #  Iniciar el proceso de autenticación del usuario.
 
 def authenticate_user():
-    #  Define la URI de redirección a la que Azure AD enviará al usuario después de la autenticación.
     base_url = "http://localhost:8501" if settings.environment == 'dev' else "https://cost-simulation-app-vthhaczahnv7bajvcnwnmj.streamlit.app"
-    redirect_uri = base_url  
+    redirect_uri = base_url
 
-    result = None # almacenara el token de acceso
+    # Obtener parámetros de la URL
+    query_params = st.query_params
+    code = query_params["code"] if "code" in query_params else None
+    state = query_params["state"] if "state" in query_params else None  
 
-    # Verifica si hay cuentas almacenadas y trata de adquirir un token en silencio 
-    # (sin intervención del usuario) si ya hay una sesión activa
-
+    # Si no hay token en la sesión se inicia el flujo de autenticación
+    result = None
     accounts = app.get_accounts()
     if accounts:
-        result = app.acquire_token_silent(settings.SCOPES, account=accounts[0]) 
-    # Si no hay token en la session se inicia el flujo de autenticacion
-    # flow: Contiene información necesaria para completar el flujo de autenticación (state, redirect_uri, scope, auth_uri, code_verifier, nonce, claims_challenge)
-    
+        result = app.acquire_token_silent(settings.SCOPES, account=accounts[0])
+
     if not result:
-        # initiate_auth_code_flow inicia un nuevo flujo de autorización utilizando el protocolo de OAuth 2.0. 
-        # El flow debe contener toda la información necesaria para que la aplicación pueda intercambiar el código de autorización por tokens de acceso y actualización.
         flow = app.initiate_auth_code_flow(settings.SCOPES, redirect_uri=redirect_uri)
         st.session_state["flow"] = flow
         st.session_state["auth_uri"] = flow["auth_uri"]
-        st.session_state["state"] = flow["state"] 
-        #st.write("Flow initialized and stored in session:", flow) # ESTA PIDIENDO PERMISOS ADICIONALES? POR QUE?
+        st.session_state["state"] = flow["state"]
+        #st.write("Flow initialized and stored in session:", flow)
 
-#--- // ---#
-
-def handle_redirect():
-    # get authorization code from URL
-    query_params = st.query_params
-    code = query_params.get("code", [None])[0] # this is ok -- code is the authorization code sent by Azure AD after user authentication.
-    # st.write("Query Params:", query_params) 
-
-    if code:
-        st.write("Session State:", st.session_state)
-        if 'flow' in st.session_state:
-            flow = st.session_state['flow']
+    # Manejar redirección si el código de autorización está presente
+    if code and state:
+        #st.write("Authorization Code:", code)
+        #st.write("State:", state)
+        
+        if "flow" in st.session_state:
+            flow = st.session_state["flow"]
+            st.write("Flow in handle redirect:", flow)
+            if flow["state"] != state:
+                st.error("State mismatch: potential CSRF attack.")
+                return
             try:
                 result = app.acquire_token_by_auth_code_flow(flow, {'code': code}, scopes=settings.SCOPES)
                 if 'access_token' in result:
@@ -68,6 +64,6 @@ def handle_redirect():
                 st.write(str(e))
         else:
             st.error("Flow not found in session.")
+        return
     else:
-        st.error("Authorization code not found in the request.")
-
+        st.write("Successfully logged in motherfucker!!!")
