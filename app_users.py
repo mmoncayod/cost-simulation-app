@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
-import authentication
+import authentication_users as authentication
 
 
 def run():
@@ -9,8 +9,8 @@ def run():
         page_icon="👋",
     )
     
-    # Handle the connection
-    if not "auth_uri" in st.session_state and "authenticated" not in st.session_state:
+    # Handle redirection from Azure AD
+    if not "auth_uri" in st.session_state and ("authenticated" not in st.session_state or "flow" not in st.session_state):
         authentication.authenticate_user()
 
     if 'authenticated' not in st.session_state or not st.session_state.authenticated:
@@ -40,5 +40,6 @@ def run():
         - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
         """
     )
+    
 
 run()

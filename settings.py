@@ -3,7 +3,7 @@ import os
 
 load_dotenv()
 
-environment = os.getenv('ENVIRONMENT', 'prod').lower()
+environment = os.getenv('ENVIRONMENT', 'dev').lower()
 
 if environment == 'prod':
     CLIENT_ID = os.getenv('PROD_AZURE_CLIENT_ID')
@@ -18,6 +18,7 @@ AUTHORITY = f"https://login.microsoftonline.com/{TENANT_ID}"
 # REDIRECT_PATH = "/getAToken" 
 # SCOPES = ["https://graph.microsoft.com/.default"] 
 SCOPES = ["User.Read"]
+REDIRECT_URI = "http://localhost:8501" if environment == 'dev' else "https://cost-simulation-app-vthhaczahnv7bajvcnwnmj.streamlit.app"
 
 if not all([CLIENT_ID, TENANT_ID, CLIENT_SECRET]):
     raise ValueError("One or more environment variables have not been configured correctly.")
