@@ -52,3 +52,6 @@ htmlcov/
 *.bak
 *.old
 Thumbs.db
+
+# settings
+settings.py
